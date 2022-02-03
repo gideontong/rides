@@ -2,10 +2,10 @@ from email.message import EmailMessage
 from smtplib import SMTP_SSL
 
 
-def send(host: str, port: str, sender: str, password: str, reciever: str, content: str) -> bool:
+def send(host: str, port: str, sender: str, password: str, reciever: str, subject: str, content: str) -> bool:
     '''Send an email message'''
     message = EmailMessage()
-    message['subject'] = 'test subject'
+    message['subject'] = subject
     message['from'] = sender
     message['to'] = reciever
     message.set_content(content)
