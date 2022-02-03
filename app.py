@@ -2,8 +2,16 @@ from rides.email.sender import send
 from rides.email.receiver import retrieve
 from json import load
 
+
+def start_moves(person: dict, mode: str):
+    recipient = person['phone'] + '@' + domains[person['carrier']]
+    send(host, port, username, password, recipient,
+         f'Hi, {person["fname"]}!', f'Do you want to drive for {mode}? (yes/no)')
+
+
 def next_move():
     pass
+
 
 if __name__ == '__main__':
     with open('config/keys.json') as fp:
@@ -11,10 +19,7 @@ if __name__ == '__main__':
 
     with open('config/domains.json') as fp:
         domains = load(fp)
-    
-    with open('config/messages.json') as fp:
-        messages = load(fp)
-    
+
     with open('config/people.json') as fp:
         people = load(fp)
 
@@ -27,8 +32,9 @@ if __name__ == '__main__':
 
     inbound = config['email']['inbound']
 
-    for person in people:
-        recipient = person['phone'] + '@' + domains[person['carrier']]
-        send(host, port, username, password, recipient, **messages['start'])
+    mode = 'Sunday service'  # or Friday large group
 
-        # retrieve(inbound['host'], username, password)
+    for person in people:
+        start_moves(person, mode)
+
+    # retrieve(inbound['host'], username, password)
