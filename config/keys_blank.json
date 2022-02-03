@@ -1,0 +1,10 @@
+{
+    "email": {
+        "username": "YOUR-USERNAME-HERE",
+        "password": "YOUR-PASSWORD-HERE",
+        "outbound": {
+            "host": "smtp.gmail.com",
+            "port": 465
+        }
+    }
+}
