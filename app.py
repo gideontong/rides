@@ -6,7 +6,7 @@ from json import load
 def start_moves(person: dict, mode: str):
     recipient = person['phone'] + '@' + domains[person['carrier']]
     send(host, port, username, password, recipient,
-         f'Hi, {person["fname"]}!', f'Do you want to drive for {mode}? (yes/no)')
+         f'Hi, {person["fname"]}!', f'Are you able to drive for {mode}? (yes/no)')
 
 
 def next_move():
