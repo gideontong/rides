@@ -1,16 +1,17 @@
-# modules
-import smtplib
 from email.message import EmailMessage
+from smtplib import SMTP_SSL
 
-def send(host: str, port: str, sender: str, password: str, reciever: str, message: str) -> bool:
-    msg = EmailMessage()
-    msg['subject'] = 'test subject'
-    msg['from'] = sender
-    msg['to'] = reciever
-    msg.set_content(message)
 
-    server = smtplib.SMTP_SSL(host, port)
-    server.login(sender, password)
-    server.sendmail(sender, reciever, msg.as_string())
-    server.quit()
+def send(host: str, port: str, sender: str, password: str, reciever: str, content: str) -> bool:
+    '''Send an email message'''
+    message = EmailMessage()
+    message['subject'] = 'test subject'
+    message['from'] = sender
+    message['to'] = reciever
+    message.set_content(content)
+
+    with SMTP_SSL(host, port) as server:
+        server.login(sender, password)
+        server.sendmail(sender, reciever, message.as_string())
     
+    return True
