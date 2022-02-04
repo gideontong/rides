@@ -7,23 +7,38 @@ from typing import (
 )
 
 
-def assign_passengers(assigned_drivers: Set[str], drivers: Dict[str, person], passengers: List[person], locations: Dict[Dict[str, int]]) -> Tuple[Set[str], List[person], List[person]]:
+def generate_distance_matrix(driver: person, passengers: List[person], locations: Dict[str, Dict[str, Dict[str, int]]]) -> List[Tuple[person, int]]:
+    '''Returns sorted list of (person, distance) to driver'''
+    distances: List[Tuple[person, int]] = list()
+    for passenger in passengers:
+        distances.append((passenger, locations[driver.address][passenger.address]['distance']))
+    
+    distances.sort(key=lambda v: v[1])
+    return distances
+
+
+def assign_passengers(assigned_drivers: Set[str], drivers: Dict[str, person], passengers: List[person], locations: Dict[str, Dict[str, Dict[str, int]]]) -> Tuple[Set[str], person, List[person], List[person]]:
     assigned_passengers: List[person] = list()
-    driver_key = choice(list(drivers))
+    driver_key = choice(set(drivers) - assigned_drivers)
     driver = drivers[driver_key]
+    logger.debug(f'Chose {driver.fname} as the next driver')
 
+    distances = generate_distance_matrix(driver, passengers, locations)
     while len(passengers) > 0 and len(assigned_passengers) <= driver.passengers:
-        pass
+        passenger, distance = distances.pop(0)
+        logger.debug(f'Chose {passenger.fname} with distance {distance} to driver {driver.fname}')
+        assigned_passengers.append(passenger)
 
+    passengers.remove(passenger)
     assigned_drivers.add(driver_key)
-    return assigned_drivers, assigned_passengers, passengers
+    return assigned_drivers, driver, assigned_passengers, passengers
 
 
-def optimize(people: Dict[str, person], locations: Dict[Dict[str, int]]):
+def optimize(people: Dict[str, person], locations: Dict[str, Dict[str, Dict[str, int]]]):
     logger.info(f'Now optimizing {len(people)} people with {len(locations)} locations')
     assigned_drivers: Set[str] = set()
-    drivers: Dict[str, person] = list()
-    assigned_passengers: Dict[str, person] = list()
+    drivers: Dict[str, person] = dict()
+    assigned_passengers: Dict[str, List[person]] = dict()
     passengers: List[person] = list()
 
     for person_ in people.values():
@@ -41,6 +56,7 @@ def optimize(people: Dict[str, person], locations: Dict[Dict[str, int]]):
         pass
 
     while len(passengers) > 0:
-        assigned_drivers, used_passengers, passengers = assign_passengers(
+        logger.debug(f'Assigning drivers and passengers, {len(passengers)} remaining')
+        assigned_drivers, driver, used_passengers, passengers = assign_passengers(
             assigned_drivers, drivers, passengers, locations)
-        assigned_passengers += used_passengers
+        assigned_passengers[driver.phone] = used_passengers

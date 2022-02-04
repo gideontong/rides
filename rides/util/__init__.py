@@ -8,7 +8,7 @@ with open('config/keys.json') as fp:
 with open('config/domains.json') as fp:
     domains = load(fp)
 
-with open('config/people.json') as fp:
+with open('config/people.json', encoding='utf-8') as fp:
     people = load(fp)
 
 

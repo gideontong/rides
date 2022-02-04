@@ -2,6 +2,24 @@ from csv import DictReader
 from json import dump
 
 
+def people_from_csv(infile: str, outfile: str) -> None:
+    with open(infile, encoding='utf-8') as fp:
+        reader = DictReader(fp)
+
+        people = list()
+        for row in reader:
+            people.append({
+                'fname': row['First Name'],
+                'lname': row['Last Name'],
+                'phone': row['Phone Number'],
+                'carrier': row['Mobile Carrier'],
+                'address': row['Address']
+            })
+    
+    with open(outfile, 'w', encoding='utf-8') as fp:
+        dump(people, fp, indent=4, sort_keys=True)
+
+
 def address_from_csv(infile: str, outfile: str) -> None:
     addresses = dict()
     with open(infile) as fp:
