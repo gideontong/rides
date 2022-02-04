@@ -15,6 +15,10 @@ class person:
         self.last = datetime.utcnow().replace(tzinfo=UTC)
         self.last_step = None
 
+        self.needs_ride = False
+        self.has_car = False
+        self.passengers = 0
+
     def email(self) -> str:
         return self.phone + '@' + domains[self.carrier]
 
@@ -53,6 +57,11 @@ class person:
         self.last_step = self.step_find_drivers
 
         return 'Hold on tight.', 'We will try to find someone take you soon, and you should get an update text.'
+    
+    def step_no_ride(self, mode: str, error: bool = False) -> Tuple[str, str]:
+        self.last_step = self.step_no_ride
+        
+        return 'No worries.', 'Hopefully you can make it anyways!'
 
     def wrap_next_step(self, mode: str, result: Union[str, None] = None) -> Tuple[str, str]:
         if not self.last_step:
@@ -65,6 +74,7 @@ class person:
                 return self.step_start(mode, error=True)
             
             if answer:
+                self.has_car = True
                 return self.step_can_drive(mode)
             else:
                 return self.step_not_driving(mode)
@@ -76,9 +86,19 @@ class person:
                 return self.step_can_drive(mode, error=True)
             
             if answer > 0:
+                self.passengers = answer
                 return self.step_find_passengers(mode)
             else:
                 return self.step_not_driving(mode, error=True)
 
         elif self.last_step == self.step_not_driving:
-            return self.step_find_drivers(mode)
+            answer, confident = parse_yes_no(result)
+
+            if not confident:
+                return self.step_not_driving(mode, error=True)
+            
+            if answer:
+                self.needs_ride = True
+                return self.step_find_drivers(mode)
+            else:
+                return self.step_no_ride(mode)
