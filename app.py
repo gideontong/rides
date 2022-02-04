@@ -1,8 +1,11 @@
+from imap_tools import MailMessage
 from rides.email.sender import send
 from rides.email.receiver import retrieve
 from rides.nodes import person
 from rides.util import config, domains, people
+from rides.util.email import process_email
 from time import sleep
+from typing import Dict, List
 
 
 BACKOFF = 10
@@ -28,11 +31,15 @@ if __name__ == '__main__':
 
     mode = 'Sunday service'  # or Friday large group
 
-    tracked_people = dict()
+    tracked_people: Dict[str, person] = dict()
     for person_ in people:
         next_person = person(person_)
         tracked_people[next_person.phone] = next_person
 
     # periodic_loop(tracked_people)
 
-    # retrieve(inbound['host'], username, password)
+    phone_numbers = set(list(tracked_people))
+    seen_emails = set()
+    emails: List[MailMessage] = retrieve(inbound['host'], username, password, phone_numbers)
+    for email in emails:
+        seen_emails = process_email(seen_emails, tracked_people, email)
