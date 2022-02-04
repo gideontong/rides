@@ -1,3 +1,4 @@
+from random import choice
 from rides.nodes import person
 from rides.util.log import logger
 from typing import (
@@ -8,6 +9,13 @@ from typing import (
 
 def assign_passengers(assigned_drivers: Set[str], drivers: Dict[str, person], passengers: List[person], locations: Dict[Dict[str, int]]) -> Tuple[Set[str], List[person], List[person]]:
     assigned_passengers: List[person] = list()
+    driver_key = choice(list(drivers))
+    driver = drivers[driver_key]
+
+    while len(passengers) > 0 and len(assigned_passengers) <= driver.passengers:
+        pass
+
+    assigned_drivers.add(driver_key)
     return assigned_drivers, assigned_passengers, passengers
 
 
