@@ -25,4 +25,7 @@ python app.py
 
 Please help me with these issues and to-do!
 
-* Process all people and save the number of people they can take. Automatically let people know if they don't actually have to drive.
+* Process all people and save the number of people they can take.
+* Notify people who they are taking, or if they don't have to drive.
+* Add command line arguments.
+* Add test cases.
