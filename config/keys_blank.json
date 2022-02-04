@@ -5,6 +5,9 @@
         "outbound": {
             "host": "smtp.gmail.com",
             "port": 465
+        },
+        "inbound": {
+            "host": "imap.gmail.com"
         }
     }
 }
