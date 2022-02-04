@@ -24,8 +24,14 @@ def periodic_loop(people: Dict[str, person]) -> None:
                 inbound['host'], username, password, phone_numbers)
 
             for email in emails:
-                name = marshal_person(email.from_, people)
+                potential = marshal_person(email.from_, people)
+                if potential:
+                    name, number = potential
+                else:
+                    pass
                 seen_emails, seen, text = process_email(seen_emails, email)
+
+            exit()
             sleep(BACKOFF)
     except KeyboardInterrupt:
         print('Program exit request by user. Exiting.')
@@ -48,11 +54,4 @@ if __name__ == '__main__':
         next_person = person(person_)
         tracked_people[next_person.phone] = next_person
 
-    # periodic_loop(tracked_people)
-
-    phone_numbers = set(list(tracked_people))
-    seen_emails = set()
-    emails: List[MailMessage] = retrieve(
-        inbound['host'], username, password, phone_numbers)
-    for email in emails:
-        seen_emails, seen, text = process_email(seen_emails, email)
+    periodic_loop(tracked_people)
