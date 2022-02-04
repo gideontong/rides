@@ -26,4 +26,3 @@ python app.py
 Please help me with these issues and to-do!
 
 * Process all people and save the number of people they can take. Automatically let people know if they don't actually have to drive.
-* Better logging.
