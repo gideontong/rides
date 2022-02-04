@@ -2,7 +2,10 @@ from imap_tools import MailMessage
 from rides.email.sender import send
 from rides.email.receiver import retrieve
 from rides.nodes import person
-from rides.util import config, domains, people
+from rides.util import (
+    config, domains, people,
+    marshal_person
+)
 from rides.util.email import process_email
 from time import sleep
 from typing import Dict, List
@@ -11,7 +14,7 @@ from typing import Dict, List
 BACKOFF = 10
 
 
-def periodic_loop(people: dict) -> None:
+def periodic_loop(people: Dict[str, person]) -> None:
     phone_numbers = set(list(people))
     seen_emails = set()
 
@@ -21,7 +24,8 @@ def periodic_loop(people: dict) -> None:
                 inbound['host'], username, password, phone_numbers)
 
             for email in emails:
-                seen_emails, text = process_email(seen_emails, email)
+                name = marshal_person(email.from_, people)
+                seen_emails, seen, text = process_email(seen_emails, email)
             sleep(BACKOFF)
     except KeyboardInterrupt:
         print('Program exit request by user. Exiting.')
@@ -51,4 +55,4 @@ if __name__ == '__main__':
     emails: List[MailMessage] = retrieve(
         inbound['host'], username, password, phone_numbers)
     for email in emails:
-        seen_emails, text = process_email(seen_emails, email)
+        seen_emails, seen, text = process_email(seen_emails, email)

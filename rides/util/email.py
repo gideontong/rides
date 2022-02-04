@@ -29,9 +29,10 @@ def process_ting(email: MailMessage) -> str:
         return ''
 
 
-def process_email(seen_emails: set, email: MailMessage) -> Tuple[set, str]:
+def process_email(seen_emails: set, email: MailMessage) -> Tuple[set, bool, str]:
     '''Returns seen emails'''
     key = str((email.from_, email.date_str))
+    seen = key in seen_emails
     seen_emails.add(key)
     
     domain = email.from_.split('@')[-1]
@@ -49,5 +50,4 @@ def process_email(seen_emails: set, email: MailMessage) -> Tuple[set, str]:
             text = ''
             pass
 
-    print(key, text)
-    return seen_emails, text
+    return seen_emails, seen, text
