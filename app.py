@@ -12,8 +12,16 @@ BACKOFF = 10
 
 
 def periodic_loop(people: dict) -> None:
-    try:    
+    phone_numbers = set(list(people))
+    seen_emails = set()
+
+    try:
         while True:
+            emails: List[MailMessage] = retrieve(
+                inbound['host'], username, password, phone_numbers)
+
+            for email in emails:
+                seen_emails, text = process_email(seen_emails, email)
             sleep(BACKOFF)
     except KeyboardInterrupt:
         print('Program exit request by user. Exiting.')
@@ -40,6 +48,7 @@ if __name__ == '__main__':
 
     phone_numbers = set(list(tracked_people))
     seen_emails = set()
-    emails: List[MailMessage] = retrieve(inbound['host'], username, password, phone_numbers)
+    emails: List[MailMessage] = retrieve(
+        inbound['host'], username, password, phone_numbers)
     for email in emails:
         seen_emails, text = process_email(seen_emails, email)
