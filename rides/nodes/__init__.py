@@ -5,7 +5,7 @@ from typing import Tuple, Union
 
 
 class person:
-    def __init__(self, data: dict):
+    def __init__(self, data: dict) -> 'person':
         self.fname = data['fname']
         self.lname = data['lname']
         self.phone = data['phone']
@@ -14,7 +14,7 @@ class person:
         self.last = datetime.now()
         self.last_step = None
 
-    def email(self):
+    def email(self) -> str:
         return self.phone + '@' + domains[self.carrier]
 
     def step_start(self, mode: str, error: bool = False) -> Tuple[str, str]:

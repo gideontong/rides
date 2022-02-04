@@ -11,7 +11,7 @@ from typing import Dict, List
 BACKOFF = 10
 
 
-def periodic_loop(people: dict):
+def periodic_loop(people: dict) -> None:
     try:    
         while True:
             sleep(BACKOFF)

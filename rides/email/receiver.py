@@ -1,8 +1,8 @@
-from imap_tools import MailBox
-from typing import FrozenSet
+from imap_tools import MailBox, MailMessage
+from typing import FrozenSet, List
 
 
-def retrieve(host: str, username: str, password: str, numbers: FrozenSet[str], limit: int = 20):
+def retrieve(host: str, username: str, password: str, numbers: FrozenSet[str], limit: int = 20) -> List[MailMessage]:
     '''Retrieve recent messages from the server'''
 
     with MailBox(host).login(username, password) as mailbox:
