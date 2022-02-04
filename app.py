@@ -42,4 +42,4 @@ if __name__ == '__main__':
     seen_emails = set()
     emails: List[MailMessage] = retrieve(inbound['host'], username, password, phone_numbers)
     for email in emails:
-        seen_emails = process_email(seen_emails, tracked_people, email)
+        seen_emails, text = process_email(seen_emails, email)
