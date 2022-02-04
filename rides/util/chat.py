@@ -20,3 +20,15 @@ def parse_yes_no(text: str) -> Tuple[bool, bool]:
     else:
         # TODO: Raise error as this should be unreachable
         return False, False
+
+
+def parse_number(text: str) -> Tuple[int, bool]:
+    '''Returns best guess at number and 100% confidence level'''
+    text = sub('[^0-9A-Za-z]+', ' ', text)
+    words = text.lower().split()
+    numbers = [element for element in words if element.isdecimal()]
+
+    if len(numbers) == 1:
+        return int(numbers[0]), True
+    else:
+        return 0, False

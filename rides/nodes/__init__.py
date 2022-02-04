@@ -1,5 +1,5 @@
 from rides.util import domains
-from rides.util.chat import parse_yes_no
+from rides.util.chat import parse_number, parse_yes_no
 from typing import Tuple, Union
 
 
@@ -32,8 +32,20 @@ class person:
     def step_not_driving(self, mode: str, error: bool = False) -> Tuple[str, str]:
         self.last_step = self.step_not_driving
         
-        return 'No worries.', 'We will try to find you a ride ASAP.'
-    
+        if error:
+            return 'I didn\'t understand!', f'Will you need a ride to {mode}? (yes/no)'
+        return 'No worries.', f'Will you need a ride to {mode}? (yes/no)'
+
+    def step_find_passengers(self, mode: str, error: bool = False) -> Tuple[str, str]:
+        self.last_step = self.step_find_passengers
+
+        return 'Thanks!', 'If anyone needs a ride, we will let you know. We really appreciate you :)'
+
+    def step_find_drivers(self, mode: str, error: bool = False) -> Tuple[str, str]:
+        self.last_step = self.step_find_drivers
+
+        return 'Hold on tight.', 'We will try to find someone take you soon, and you should get an update text.'
+
     def wrap_next_step(self, mode: str, result: Union[str, None] = None) -> Tuple[str, str]:
         if not self.last_step:
             return self.step_start(mode)
@@ -50,9 +62,15 @@ class person:
                 return self.step_not_driving(mode)
         
         elif self.last_step is self.step_can_drive:
-            # TODO
-            pass
+            answer, confident = parse_number(result)
+            
+            if not confident:
+                return self.step_can_drive(mode, error=True)
+            
+            if answer > 0:
+                return self.step_find_passengers(mode)
+            else:
+                return self.step_not_driving(mode, error=True)
 
         elif self.last_step is self.step_not_driving:
-            # TODO
-            pass
+            return self.step_find_drivers(mode)
