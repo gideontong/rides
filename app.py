@@ -13,6 +13,15 @@ from typing import Dict, List
 
 BACKOFF = 10
 
+EMAIL = config['email']
+USERNAME = EMAIL['username']
+PASSWORD = EMAIL['password']
+
+HOST = EMAIL['outbound']['host']
+PORT = EMAIL['outbound']['port']
+
+INBOUND = config['email']['inbound']
+
 
 def periodic_loop(people: Dict[str, person]) -> None:
     phone_numbers = set(list(people))
@@ -21,14 +30,16 @@ def periodic_loop(people: Dict[str, person]) -> None:
     try:
         while True:
             emails: List[MailMessage] = retrieve(
-                inbound['host'], username, password, phone_numbers)
+                INBOUND['host'], USERNAME, PASSWORD, phone_numbers)
 
             for email in emails:
                 potential = marshal_person(email.from_, people)
                 if potential:
                     name, number = potential
                 else:
-                    pass
+                    # TODO: handle error of unknown person
+                    continue
+
                 seen_emails, seen, text = process_email(seen_emails, email)
 
             exit()
@@ -38,15 +49,6 @@ def periodic_loop(people: Dict[str, person]) -> None:
 
 
 if __name__ == '__main__':
-    email = config['email']
-    username = email['username']
-    password = email['password']
-
-    host = email['outbound']['host']
-    port = email['outbound']['port']
-
-    inbound = config['email']['inbound']
-
     mode = 'Sunday service'  # or Friday large group
 
     tracked_people: Dict[str, person] = dict()
