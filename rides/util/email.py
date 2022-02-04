@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from imap_tools import MailMessage
+from rides.util.log import logger
 from typing import Tuple
 
 
@@ -35,6 +36,7 @@ def process_email(seen_emails: set, email: MailMessage) -> Tuple[set, bool, str]
     '''Returns seen emails'''
     key = str((email.from_, email.date_str))
     seen = key in seen_emails
+    logger.debug(f'Processing an email from {email.from_} at {email.date_str}')
     seen_emails.add(key)
     
     domain = email.from_.split('@')[-1]

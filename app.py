@@ -28,6 +28,7 @@ INBOUND = config['email']['inbound']
 
 def periodic_loop(people: Dict[str, person], mode: str) -> None:
     start_time = datetime.utcnow().replace(tzinfo=UTC)
+    print(f'Waiting {BACKOFF} seconds to allow timestamp offset')
     sleep(BACKOFF)
 
     phone_numbers = set(list(people))
@@ -62,9 +63,10 @@ def periodic_loop(people: Dict[str, person], mode: str) -> None:
                     send(HOST, PORT, USERNAME, PASSWORD,
                          person_.email(), subject, body)
 
+            print(f'Waiting {BACKOFF} seconds')
             sleep(BACKOFF)
     except KeyboardInterrupt:
-        logger.warn('User requested exit, exiting now')
+        logger.warning('User requested exit, exiting now')
 
 
 if __name__ == '__main__':
