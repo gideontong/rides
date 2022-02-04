@@ -74,7 +74,6 @@ class person:
                 return self.step_start(mode, error=True)
             
             if answer:
-                self.has_car = True
                 return self.step_can_drive(mode)
             else:
                 return self.step_not_driving(mode)
@@ -86,6 +85,7 @@ class person:
                 return self.step_can_drive(mode, error=True)
             
             if answer > 0:
+                self.has_car = True
                 self.passengers = answer
                 return self.step_find_passengers(mode)
             else:
