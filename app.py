@@ -1,3 +1,4 @@
+from datetime import datetime
 from imap_tools import MailMessage
 from pytz import UTC
 from rides.email.sender import send
@@ -25,6 +26,9 @@ INBOUND = config['email']['inbound']
 
 
 def periodic_loop(people: Dict[str, person], mode: str) -> None:
+    start_time = datetime.utcnow().replace(tzinfo=UTC)
+    sleep(BACKOFF)
+
     phone_numbers = set(list(people))
     seen_emails = set()
 
@@ -51,9 +55,7 @@ def periodic_loop(people: Dict[str, person], mode: str) -> None:
 
                 seen_emails, seen, text = process_email(seen_emails, email)
 
-                date = email.date
-                last = person_.last
-                if not seen and date > last:
+                if not seen and email.date > start_time:
                     print(f'Processing new text from {person_.fname}: {" ".join(text.split())}')
                     subject, body = person_.wrap_next_step(mode, text)
                     send(HOST, PORT, USERNAME, PASSWORD,
