@@ -15,8 +15,8 @@ with open('config/people.json') as fp:
 def marshal_person(address: str, people: dict) -> Union[Tuple[str, str], None]:
     username = address.split('@')[0]
 
-    for person in people:
-        if username in address:
-            return person, people[person].number
+    for number in people:
+        if number in username:
+            return people[number], number
     
     return None

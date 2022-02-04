@@ -3,6 +3,14 @@ from imap_tools import MailMessage
 from typing import Tuple
 
 
+def decode_attachments(email: MailMessage) -> str:
+    res = ''
+    for attachment in email.attachments:
+        if attachment.filename.endswith('.txt'):
+            res += attachment.payload.decode('utf-8') + ' '
+    return res
+
+
 def process_tmobile(email: MailMessage) -> str:
     soup = BeautifulSoup(email.html, 'html.parser')
     text = soup.body.get_text()
@@ -10,10 +18,7 @@ def process_tmobile(email: MailMessage) -> str:
 
 
 def process_verizon(email: MailMessage) -> str:
-    if len(email.attachments) > 0:
-        return email.attachments[0].payload.decode('utf-8')
-    else:
-        return ''
+    return decode_attachments(email)
 
 
 def process_sprint(email: MailMessage) -> str:
@@ -23,10 +28,7 @@ def process_sprint(email: MailMessage) -> str:
 
 
 def process_ting(email: MailMessage) -> str:
-    if len(email.attachments) > 0:
-        return email.attachments[0].payload.decode('utf-8')
-    else:
-        return ''
+    return decode_attachments(email)
 
 
 def process_email(seen_emails: set, email: MailMessage) -> Tuple[set, bool, str]:

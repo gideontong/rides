@@ -8,7 +8,7 @@ from rides.util import (
 )
 from rides.util.email import process_email
 from time import sleep
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 BACKOFF = 10
@@ -33,14 +33,16 @@ def periodic_loop(people: Dict[str, person]) -> None:
                 INBOUND['host'], USERNAME, PASSWORD, phone_numbers)
 
             for email in emails:
-                potential = marshal_person(email.from_, people)
+                potential: Tuple[person, str] = marshal_person(email.from_, people)
                 if potential:
-                    name, number = potential
+                    person_, number = potential
                 else:
                     # TODO: handle error of unknown person
                     continue
 
                 seen_emails, seen, text = process_email(seen_emails, email)
+
+                print(person_.fname, person_.lname, number, text)
 
             exit()
             sleep(BACKOFF)
