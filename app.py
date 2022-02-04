@@ -1,5 +1,6 @@
 from rides.email.sender import send
 from rides.email.receiver import retrieve
+from rides.util import config, domains, people
 from json import load
 
 
@@ -14,15 +15,6 @@ def next_move():
 
 
 if __name__ == '__main__':
-    with open('config/keys.json') as fp:
-        config = load(fp)
-
-    with open('config/domains.json') as fp:
-        domains = load(fp)
-
-    with open('config/people.json') as fp:
-        people = load(fp)
-
     email = config['email']
     username = email['username']
     password = email['password']
