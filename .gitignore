@@ -2,6 +2,7 @@
 directions.json
 keys.json
 people.json
+data/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
