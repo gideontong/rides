@@ -1,17 +1,19 @@
 from rides.email.sender import send
 from rides.email.receiver import retrieve
+from rides.nodes import person
 from rides.util import config, domains, people
-from json import load
+from time import sleep
 
 
-def start_moves(person: dict, mode: str):
-    recipient = person['phone'] + '@' + domains[person['carrier']]
-    send(host, port, username, password, recipient,
-         f'Hi, {person["fname"]}!', f'Are you able to drive for {mode}? (yes/no)')
+BACKOFF = 10
 
 
-def next_move():
-    pass
+def periodic_loop(people: dict):
+    try:    
+        while True:
+            sleep(BACKOFF)
+    except KeyboardInterrupt:
+        print('Program exit request by user. Exiting.')
 
 
 if __name__ == '__main__':
@@ -26,7 +28,11 @@ if __name__ == '__main__':
 
     mode = 'Sunday service'  # or Friday large group
 
-    for person in people:
-        start_moves(person, mode)
+    tracked_people = dict()
+    for person_ in people:
+        next_person = person(person_)
+        tracked_people[next_person.phone] = next_person
+
+    # periodic_loop(tracked_people)
 
     # retrieve(inbound['host'], username, password)
