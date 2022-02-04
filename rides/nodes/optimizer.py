@@ -11,3 +11,11 @@ def optimize(people: Dict[str, person], locations: Dict[Dict[str, int]]):
             drivers.append(person_)
         elif person_.needs_ride:
             passengers.append(person_)
+    
+    total_spots = 0
+    for driver in drivers:
+        total_spots += driver.passengers
+    
+    # TODO: If there aren't enough rides
+    if len(passengers) > total_spots:
+        pass
