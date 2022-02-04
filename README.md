@@ -19,8 +19,10 @@ pip install -r requirements.txt
 python app.py
 ```
 
-## Issues
+## To-Do
 
-Please help me with these issues!
+Please help me with these issues and to-do!
 
+* Process all people and save the number of people they can take. Automatically let people know if they don't actually have to drive.
 * Sometimes replies are not processed. Proposed fix: offset the start time so that all messages since the start are processed.
+* Better logging.
