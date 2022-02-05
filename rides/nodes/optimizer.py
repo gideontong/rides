@@ -1,3 +1,4 @@
+from hashlib import new
 from random import choice
 from rides.nodes import person
 from rides.util.log import logger
@@ -11,7 +12,7 @@ def generate_distance_matrix(driver: person, passengers: List[person], locations
     '''Returns sorted list of (person, distance) to driver'''
     distances: List[Tuple[person, int]] = list()
     for passenger in passengers:
-        distances.append((passenger, locations[driver.address][passenger.address]['distance']))
+        distances.append((passenger, locations[driver.address][passenger.address]['dist']))
     
     distances.sort(key=lambda v: v[1])
     return distances
@@ -19,7 +20,7 @@ def generate_distance_matrix(driver: person, passengers: List[person], locations
 
 def assign_passengers(assigned_drivers: Set[str], drivers: Dict[str, person], passengers: List[person], locations: Dict[str, Dict[str, Dict[str, int]]]) -> Tuple[Set[str], person, List[person], List[person]]:
     assigned_passengers: List[person] = list()
-    driver_key = choice(set(drivers) - assigned_drivers)
+    driver_key = choice(list(set(drivers) - assigned_drivers))
     driver = drivers[driver_key]
     logger.debug(f'Chose {driver.fname} as the next driver')
 
@@ -55,8 +56,22 @@ def optimize(people: Dict[str, person], locations: Dict[str, Dict[str, Dict[str,
     if len(passengers) > total_spots:
         pass
 
-    while len(passengers) > 0:
+    drivers_left = len(drivers)
+    while len(passengers) > 0 or drivers_left > 0:
         logger.debug(f'Assigning drivers and passengers, {len(passengers)} remaining')
+        if len(passengers) == 0:
+            # TODO: Notify a driver they don't have to drive
+            logger.debug('Extra drivers detected, moving some to passengers')
+            new_passenger = choice(list(set(drivers) - assigned_drivers))
+            if drivers_left > 1:
+                logger.debug(f'Converting {drivers[new_passenger].fname} from driver to passenger')
+                passengers.append(drivers[new_passenger])
+                del drivers[new_passenger]
+            else:
+                logger.debug(f'A driver remained, which was {drivers[new_passenger].fname}')
+                # TODO: Notify a driver they can drive themselves
+
         assigned_drivers, driver, used_passengers, passengers = assign_passengers(
             assigned_drivers, drivers, passengers, locations)
         assigned_passengers[driver.phone] = used_passengers
+        drivers_left = len(drivers) - len(assigned_drivers)

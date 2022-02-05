@@ -74,7 +74,7 @@ def periodic_loop(people: Dict[str, person], mode: str) -> None:
 def test_optimizer(people: Dict[str, person]):
     # Randomly assign drivers and passengers
     driver_count = len(people) // 5 + 1
-    drivers = set(sample(set(people, driver_count)))
+    drivers = set(sample(list(people), driver_count))
     for driver_key in drivers:
         people[driver_key].has_car = True
         people[driver_key].passengers = 4
@@ -97,5 +97,5 @@ if __name__ == '__main__':
         tracked_people[next_person.phone] = next_person
     logger.debug(f'{len(tracked_people)} people now being processed in memory')
 
-    test_optimizer(people)
+    test_optimizer(tracked_people)
     # periodic_loop(tracked_people, mode)
