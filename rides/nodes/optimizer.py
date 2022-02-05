@@ -28,8 +28,8 @@ def assign_passengers(assigned_drivers: Set[str], drivers: Dict[str, person], pa
         passenger, distance = distances.pop(0)
         logger.debug(f'Chose {passenger.fname} with distance {distance} to driver {driver.fname}')
         assigned_passengers.append(passenger)
+        passengers.remove(passenger)
 
-    passengers.remove(passenger)
     assigned_drivers.add(driver_key)
     return assigned_drivers, driver, assigned_passengers, passengers
 

@@ -1,12 +1,14 @@
 from datetime import datetime
 from imap_tools import MailMessage
 from pytz import UTC
+from random import sample
 from rides.email.sender import send
 from rides.email.receiver import retrieve
 from rides.nodes import person
+from rides.nodes.optimizer import optimize
 from rides.util import (
-    config, domains, people,
-    marshal_person
+    config, locations, domains,
+    people, marshal_person
 )
 from rides.util.email import process_email
 from rides.util.log import logger
@@ -69,6 +71,21 @@ def periodic_loop(people: Dict[str, person], mode: str) -> None:
         logger.warning('User requested exit, exiting now')
 
 
+def test_optimizer(people: Dict[str, person]):
+    # Randomly assign drivers and passengers
+    driver_count = len(people) // 5 + 1
+    drivers = set(sample(set(people, driver_count)))
+    for driver_key in drivers:
+        people[driver_key].has_car = True
+        people[driver_key].passengers = 4
+
+    for passenger_key in set(people) - drivers:
+        people[passenger_key].needs_ride = True
+
+    # Run passenger assignment
+    optimize(people, locations)
+
+
 if __name__ == '__main__':
     logger.info('Welcome to Kairos Rides Organizer')
     mode = 'Sunday service'  # or Friday large group
@@ -80,4 +97,5 @@ if __name__ == '__main__':
         tracked_people[next_person.phone] = next_person
     logger.debug(f'{len(tracked_people)} people now being processed in memory')
 
-    periodic_loop(tracked_people, mode)
+    test_optimizer(people)
+    # periodic_loop(tracked_people, mode)
