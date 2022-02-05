@@ -17,6 +17,7 @@ class person:
 
         self.needs_ride = False
         self.has_car = False
+        self.declined = False
         self.passengers = 0
 
     def email(self) -> str:
@@ -101,4 +102,5 @@ class person:
                 self.needs_ride = True
                 return self.step_find_drivers(mode)
             else:
+                self.declined = True
                 return self.step_no_ride(mode)
