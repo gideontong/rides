@@ -20,7 +20,13 @@ def generate_distance_matrix(driver: person, passengers: List[person], locations
 
 def assign_passengers(assigned_drivers: Set[str], drivers: Dict[str, person], passengers: List[person], locations: Dict[str, Dict[str, Dict[str, int]]]) -> Tuple[Set[str], person, List[person], List[person]]:
     assigned_passengers: List[person] = list()
-    driver_key = choice(list(set(drivers) - assigned_drivers))
+    drivers_left = list(set(drivers) - assigned_drivers)
+
+    # TODO: If there are no drivers left
+    if not drivers_left:
+        logger.error('Ran out of drivers to assign passengers!')
+
+    driver_key = choice(drivers_left)
     driver = drivers[driver_key]
     logger.debug(f'Chose {driver.fname} as the next driver')
 
@@ -54,7 +60,7 @@ def optimize(people: Dict[str, person], locations: Dict[str, Dict[str, Dict[str,
 
     # TODO: If there aren't enough rides
     if len(passengers) > total_spots:
-        pass
+        logger.warning('Not enough spots for all passengers!')
 
     drivers_left = len(drivers)
     while len(passengers) > 0 or drivers_left > 0:

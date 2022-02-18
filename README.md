@@ -25,6 +25,8 @@ python app.py
 
 Please help me with these issues and to-do!
 
+* Remaining drivers are assigned after all passengers are assigned, but they really should be assigned to any empty cars left.
+* Sometimes passengers are assigned to a driver farther away when they really could be assigned to someone that lives with them. This needs additional optimization.
 * Automatically optimize once everyone has responded or the deadline has been reached.
 * Notify people who they are taking, or if they don't have to drive.
 * Add command line arguments.
