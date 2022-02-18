@@ -28,6 +28,13 @@ PORT = EMAIL['outbound']['port']
 INBOUND = config['email']['inbound']
 
 
+def ready_next_step(people: Dict[str, person]):
+    for person_ in people.values():
+        if not (person_.needs_ride or person_.has_car or person_.declined):
+            return False
+    return True
+
+
 def periodic_loop(people: Dict[str, person], mode: str) -> None:
     start_time = datetime.utcnow().replace(tzinfo=UTC)
     print(f'Waiting {BACKOFF} seconds to allow timestamp offset')
