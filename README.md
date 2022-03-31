@@ -4,6 +4,8 @@ A text messaging bot that automatically organizes rides for those who are off-ca
 
 ## Getting Started
 
+There's no guide on production environments yet.
+
 ### Setup
 
 Requires Python 3.10+ and a virtual environment.
@@ -21,6 +23,12 @@ pip install -r requirements.txt
 
 ```bash
 python app.py
+```
+
+You'll need to either point your Twilio URL to your public-facing server or use this `ngrok` command:
+
+```bash
+ngrok http 5000
 ```
 
 ## To-Do
