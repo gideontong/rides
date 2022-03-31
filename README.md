@@ -27,7 +27,7 @@ python app.py
 
 Please help me with these issues and to-do!
 
-* Add Twilio backend (or other programmable SMS).
+* Switch backend to Twilio completely
 * Remaining drivers are assigned after all passengers are assigned, but they really should be assigned to any empty cars left.
 * Optimizer savestates via files, import and export support.
 * Sometimes passengers are assigned to a driver farther away when they really could be assigned to someone that lives with them. This needs additional optimization.
