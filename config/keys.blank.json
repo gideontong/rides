@@ -9,5 +9,10 @@
         "inbound": {
             "host": "imap.gmail.com"
         }
+    },
+    "twilio": {
+        "sid": "TWILIO-ACCOUNT-SID",
+        "token": "TWILIO-AUTH-TOKEN",
+        "number": "+15555555555"
     }
 }

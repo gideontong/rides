@@ -6,6 +6,8 @@ from rides.email.sender import send
 from rides.email.receiver import retrieve
 from rides.nodes import person
 from rides.nodes.optimizer import optimize
+from rides.sms import send_message
+from rides.sms.server import responder
 from rides.util import (
     config, locations, domains,
     people, marshal_person
@@ -19,23 +21,23 @@ from typing import Dict, List, Tuple
 BACKOFF = 10
 
 EMAIL = config['email']
+
 USERNAME = EMAIL['username']
 PASSWORD = EMAIL['password']
 
 HOST = EMAIL['outbound']['host']
 PORT = EMAIL['outbound']['port']
+INBOUND = EMAIL['inbound']
 
-INBOUND = config['email']['inbound']
 
-
-def ready_next_step(people: Dict[str, person]):
+def email_next_step(people: Dict[str, person]):
     for person_ in people.values():
         if not (person_.needs_ride or person_.has_car or person_.declined):
             return False
     return True
 
 
-def periodic_loop(people: Dict[str, person], mode: str) -> None:
+def email_periodic_loop(people: Dict[str, person], mode: str) -> None:
     start_time = datetime.utcnow().replace(tzinfo=UTC)
     print(f'Waiting {BACKOFF} seconds to allow timestamp offset')
     sleep(BACKOFF)
@@ -104,5 +106,7 @@ if __name__ == '__main__':
         tracked_people[next_person.phone] = next_person
     logger.debug(f'{len(tracked_people)} people now being processed in memory')
 
-    test_optimizer(tracked_people)
+    responder.run(debug=True)
+
+    # test_optimizer(tracked_people)
     # periodic_loop(tracked_people, mode)

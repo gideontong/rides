@@ -4,7 +4,6 @@ from smtplib import SMTP_SSL
 
 def send(host: str, port: str, sender: str, password: str, reciever: str, subject: str, content: str) -> bool:
     '''Send an email message'''
-    return True
     message = EmailMessage()
     message['subject'] = subject
     message['from'] = sender

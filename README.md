@@ -8,7 +8,9 @@ A text messaging bot that automatically organizes rides for those who are off-ca
 
 Requires Python 3.10+ and a virtual environment.
 
-Copy `keys_blank.json` to `keys.json` and `people_blank.json` to `people.json` and fill as appropiate.
+Copy `keys_blank.json` to `keys.json` and `people_blank.json` to `people.json` and fill as appropriate.
+
+> You need to fill out the section of keys that you are using.
 
 ```bash
 pip install wheel
